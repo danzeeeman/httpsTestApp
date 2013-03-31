@@ -1,7 +1,7 @@
 ###This is a Test App for HTTPS support in openFrameworks. 
 I like using test apps when debugging a defect/bug and sometimes its easier to show a problem to someone else than 
 to describe it.  Also if someone else wants to look at the issue because they know what is wrong and how to fix it
-they can quickly grab this project and code away. This won't win any points for being elegant but it.
+they can quickly grab this project and code away. This won't win any points for being elegant.
 
 
 What it does:
