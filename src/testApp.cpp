@@ -39,7 +39,7 @@ void testApp::urlResponse(ofHttpResponse & response)
 //--------------------------------------------------------------
 void testApp::update(){
     if (errorCase == 0) {
-        ofLog(OF_LOG_VERBOSE, "errorCase == 0");
+
         if(!loaded){
             ofHttpResponse h = ofLoadURL(httpURL);
             httpResponse = ofToString(h.data);
@@ -53,16 +53,17 @@ void testApp::update(){
         }
     }
     if (errorCase == 1) {
-         ofLog(OF_LOG_VERBOSE, "errorCase == 1");
+        
         ofLog(OF_LOG_VERBOSE, "ofLoadURL(httpURL);");
         ofHttpResponse h = ofLoadURL(httpURL);
         httpResponse = ofToString(h.data);
+        
         ofLog(OF_LOG_VERBOSE, "ofLoadURL(httpsURL);");
         ofHttpResponse p = ofLoadURL(httpsURL);
         httpsResponse = ofToString(p.data);
     }
     if (errorCase == 2) {
-         ofLog(OF_LOG_VERBOSE, "errorCase == 2");
+        
         if(ofGetFrameNum()%15){
             ofLog(OF_LOG_VERBOSE, "ofLoadURLAsync(httpURL, \"http-request\");");
             ofLoadURLAsync(httpURL, "http-request");
@@ -71,7 +72,6 @@ void testApp::update(){
         }
     }
     if (errorCase == 3) {
-            ofLog(OF_LOG_VERBOSE, "errorCase == 3");
         if(ofGetFrameNum()%15){
             ofLog(OF_LOG_VERBOSE, "ofLoadURL(httpsURL);");
             ofHttpResponse h = ofLoadURL(httpURL);
@@ -121,7 +121,10 @@ void testApp::keyPressed(int key){
     if(key == '5'){
         errorCase = 5;
     }
-    
+    if(key == ' '){
+       ofLoadURLAsync(httpURL, "http-request");
+       ofLoadURLAsync(httpsURL, "https-request"); 
+    }
 }
 
 //--------------------------------------------------------------
