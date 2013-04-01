@@ -2,12 +2,10 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    ofSetFrameRate(30);
+    ofSetVerticalSync(true);
     ofRegisterURLNotification(this);
-    
-    httpResponse = "NOT LOADED";
-    httpsResponse = "NOT LOADED";
-    httpsResponseAsync = "NOT LOADED";
-    httpResponseAsync = "NOT LOADED";
+    ofSetLogLevel(OF_LOG_VERBOSE);
     
     loaded = false;
     
@@ -15,11 +13,12 @@ void testApp::setup(){
     
     httpURL = "http://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=76fee119f6a01912ef7d32cbedc761bb&per_page=1&format=json&nojsoncallback=1";
     
+    httpResponse = "NOT LOADED";
+    httpsResponse = "NOT LOADED";
+    httpsResponseAsync = "NOT LOADED";
+    httpResponseAsync = "NOT LOADED";
     
-    ofLoadURLAsync(httpURL, "http-request");
-    
-    
-    ofLoadURLAsync(httpsURL, "https-request");
+    errorCase = 0;
 }
 
 
@@ -27,10 +26,10 @@ void testApp::urlResponse(ofHttpResponse & response)
 {
     if(response.status==200 && response.request.name == "https-request"){
         httpsResponseAsync  = ofToString(response.data);
-
-    }if(response.status==200 && response.request.name == "http-request"){
+        
+    }else if(response.status==200 && response.request.name == "http-request"){
         httpResponseAsync  = ofToString(response.data);
-
+        
     }else{
 		error = response.request.name+" "+ofToString(response.status)+" "+ofToString(response.data);
 	}
@@ -39,19 +38,52 @@ void testApp::urlResponse(ofHttpResponse & response)
 
 //--------------------------------------------------------------
 void testApp::update(){
-    if(!loaded){
-        
+    if (errorCase == 0) {
+        ofLog(OF_LOG_VERBOSE, "errorCase == 0");
+        if(!loaded){
+            ofHttpResponse h = ofLoadURL(httpURL);
+            httpResponse = ofToString(h.data);
+            ofHttpResponse p = ofLoadURL(httpsURL);
+            httpsResponse = ofToString(p.data);
+            
+            ofLoadURLAsync(httpURL, "http-request");
+            ofLoadURLAsync(httpsURL, "https-request");
+            
+            loaded = true;
+        }
+    }
+    if (errorCase == 1) {
+         ofLog(OF_LOG_VERBOSE, "errorCase == 1");
+        ofLog(OF_LOG_VERBOSE, "ofLoadURL(httpURL);");
         ofHttpResponse h = ofLoadURL(httpURL);
         httpResponse = ofToString(h.data);
-        
-        
+        ofLog(OF_LOG_VERBOSE, "ofLoadURL(httpsURL);");
         ofHttpResponse p = ofLoadURL(httpsURL);
         httpsResponse = ofToString(p.data);
-
-        loaded = true;
     }
-    
+    if (errorCase == 2) {
+         ofLog(OF_LOG_VERBOSE, "errorCase == 2");
+        if(ofGetFrameNum()%15){
+            ofLog(OF_LOG_VERBOSE, "ofLoadURLAsync(httpURL, \"http-request\");");
+            ofLoadURLAsync(httpURL, "http-request");
+            ofLog(OF_LOG_VERBOSE, "ofLoadURLAsync(httpsURL, \"https-request\");");
+            ofLoadURLAsync(httpsURL, "https-request");
+        }
+    }
+    if (errorCase == 3) {
+            ofLog(OF_LOG_VERBOSE, "errorCase == 3");
+        if(ofGetFrameNum()%15){
+            ofLog(OF_LOG_VERBOSE, "ofLoadURL(httpsURL);");
+            ofHttpResponse h = ofLoadURL(httpURL);
+            ofLog(OF_LOG_VERBOSE, "ofLoadURLAsync(httpURL, \"http-request\");");
+            ofLoadURLAsync(httpURL, "http-request");
+            httpResponse = ofToString(h.data);
+            ofLog(OF_LOG_VERBOSE, "ofLoadURLAsync(httpsURL, \"https-request\");");
+            ofLoadURLAsync(httpsURL, "https-request");
+        }
+    }
 }
+
 
 //--------------------------------------------------------------
 void testApp::draw(){
@@ -64,7 +96,32 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    loaded = !loaded;
+    loaded = false;
+    
+    httpResponse = "NOT LOADED";
+    httpsResponse = "NOT LOADED";
+    httpsResponseAsync = "NOT LOADED";
+    httpResponseAsync = "NOT LOADED";
+    
+    if(key == '0'){
+        errorCase = 0;
+    }
+    if(key == '1'){
+        errorCase = 1;
+    }
+    if(key == '2'){
+        errorCase = 2;
+    }
+    if(key == '3'){
+        errorCase = 3;
+    }
+    if(key == '4'){
+        errorCase = 4;
+    }
+    if(key == '5'){
+        errorCase = 5;
+    }
+    
 }
 
 //--------------------------------------------------------------

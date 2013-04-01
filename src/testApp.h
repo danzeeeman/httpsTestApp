@@ -37,4 +37,7 @@ public:
     ofImage syncImage;
     
     bool loaded;
+    
+    
+    int errorCase;
 };
